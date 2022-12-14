@@ -19,8 +19,9 @@ contract LiquidityPool is ReentrancyGuard {
         reward = _reward;
     }
 
-    function calcReward(uint256 _timestamp) public pure returns(uint256) {
-        //TODO
+    function calcReward(uint256 _balance, uint256 _timestamp, uint256 _now, uint256 _reward) public pure returns(uint256) {
+        uint256 months_passed = (_now - _timestamp) / (30 days);
+        return (_balance * (100 + _reward) ** months_passed) / 100 ** months_passed - _balance;
     }
 
     function deposit() external nonReentrant payable {
@@ -35,14 +36,26 @@ contract LiquidityPool is ReentrancyGuard {
     }
 
     function withdraw() external nonReentrant {
-        uint256 amountToWithdraw = balances[msg.sender].balance + calcReward(block.timestamp);
+        uint256 amountToWithdraw = balances[msg.sender].balance 
+            + calcReward(
+                balances[msg.sender].balance,
+                balances[msg.sender].timestamp,
+                block.timestamp,
+                reward
+            );
         balances[msg.sender].balance = 0;
         (bool sent, ) = payable(msg.sender).call{value: amountToWithdraw}("");
         require(sent, "Failed to withdraw");
     }
 
     function withdraw(address _token) external nonReentrant {
-        uint256 amountToWithdraw = tokenBalances[_token][msg.sender].balance + calcReward(block.timestamp);
+        uint256 amountToWithdraw = tokenBalances[_token][msg.sender].balance
+        + calcReward(
+                tokenBalances[_token][msg.sender].balance,
+                tokenBalances[_token][msg.sender].timestamp,
+                block.timestamp,
+                reward
+            );
         tokenBalances[_token][msg.sender].balance = 0;
         IERC20(_token).transfer(msg.sender, amountToWithdraw);
     }
