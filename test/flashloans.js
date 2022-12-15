@@ -103,4 +103,34 @@ describe("LiquidityPool", function () {
         expect(await this.flash_loans.connect(user1)["withdraw(address)"](this.test_token.address)).to.changeTokenBalance(this.test_token, user1, "110462212541120451001");
         console.log(await this.test_token.balanceOf(user1.address));
     });
+
+    it("Flashloan test eth", async function () {
+        const TRE = await hre.ethers.getContractFactory("TestReceiverETH", deployer);
+        const receiver_eth = await TRE.deploy();
+        await receiver_eth.deployed();
+        await deployer.sendTransaction({
+            to: receiver_eth.address,
+            value: "500000000000000000"
+        });
+        expect(await ethers.provider.getBalance(receiver_eth.address)).to.equal("500000000000000000");
+        await deployer.sendTransaction({
+            to: this.flash_loans.address,
+            value: "100000000000000000000"
+        });
+        expect(await ethers.provider.getBalance(this.flash_loans.address)).to.equal("100000000000000000000");
+        await this.flash_loans.connect(user1)["flashLoan(uint256,address)"]("100000000000000000000", receiver_eth.address);
+        expect(await ethers.provider.getBalance(this.flash_loans.address)).to.equal("100500000000000000000");
+    });
+
+    it("Flashloan test erc20", async function (){
+        const TRT = await hre.ethers.getContractFactory("TestReceiverERC20", deployer);
+        const receiver_erc20 = await TRT.deploy(this.test_token.address);
+        await receiver_erc20.deployed();
+        await this.test_token.connect(deployer).transfer(this.flash_loans.address, "100000000000000000000");
+        expect(await this.test_token.balanceOf(this.flash_loans.address)).to.equal("100000000000000000000");
+        await this.test_token.connect(deployer).transfer(receiver_erc20.address, "500000000000000000");
+        expect(await this.test_token.balanceOf(receiver_erc20.address)).to.equal("500000000000000000");
+        await this.flash_loans.connect(user1)["flashLoan(uint256,address,address)"]("100000000000000000000", this.test_token.address, receiver_erc20.address);
+        expect(await this.test_token.balanceOf(this.flash_loans.address)).to.equal("100500000000000000000");
+    });
 });
