@@ -78,7 +78,7 @@ contract FlashLoans is ReentrancyGuard {
         uint256 fee = calcFee(amount, flashLoanFee); 
         IFlashLoanReceiver(_flashLoanReceiver).execute{value: amount}(fee);
         uint256 balanceAfter = address(this).balance;
-        //require(balanceAfter >= balanceBefore + fee, "Flash loan hasn't been paid back");
+        require(balanceAfter >= balanceBefore + fee, "Flash loan hasn't been paid back");
     }
 
     function flashLoan(uint256 amount, address _token, address _flashLoanReceiver) external nonReentrant payable {
@@ -91,7 +91,7 @@ contract FlashLoans is ReentrancyGuard {
             "Not enough tokens on the balance of the contract"
         );
         uint256 fee = calcFee(amount, flashLoanFee);
-        IERC20(_token).transfer(_flashLoanReceiver, amount);
+        IERC20(_token).approve(_flashLoanReceiver, amount);
         IFlashLoanReceiver(_flashLoanReceiver).execute(fee);
         require(
             IERC20(_token).allowance(_flashLoanReceiver, address(this)) == amount + fee,
@@ -99,7 +99,5 @@ contract FlashLoans is ReentrancyGuard {
         );
         IERC20(_token).transferFrom(_flashLoanReceiver, address(this), amount + fee);
     }
-
-    fallback() external payable {}
     receive() external payable {}
 }
