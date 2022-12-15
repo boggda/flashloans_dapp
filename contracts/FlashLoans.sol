@@ -98,4 +98,6 @@ contract FlashLoans is ReentrancyGuard {
         );
         IERC20(_token).transferFrom(msg.sender, address(this), amount + fee);
     }
+
+    receive() external payable {}
 }
