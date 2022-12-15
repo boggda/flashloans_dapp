@@ -2,5 +2,5 @@
 pragma solidity ^0.8.0;
 
 interface IFlashLoanReceiver {
-    function execute() external payable;
+    function execute(uint256 fee) external payable;
 }

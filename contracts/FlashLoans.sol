@@ -71,18 +71,19 @@ contract FlashLoans is ReentrancyGuard {
         IERC20(_token).transfer(msg.sender, amountToWithdraw);
     }
 
-    function flashLoan(uint256 amount) external nonReentrant payable {
-        require(balances[msg.sender].balance == 0, "You can't take a flash loan if you've already staked eth");
+    function flashLoan(uint256 amount, address _flashLoanReceiver) external nonReentrant payable {
+        require(balances[_flashLoanReceiver].balance == 0, "You can't take a flash loan if you've already staked eth");
         uint256 balanceBefore = address(this).balance;
         require(amount <= balanceBefore, "Not enough eth in the contract");
-        IFlashLoanReceiver(msg.sender).execute{value: amount}();
+        uint256 fee = calcFee(amount, flashLoanFee); 
+        IFlashLoanReceiver(_flashLoanReceiver).execute{value: amount}(fee);
         uint256 balanceAfter = address(this).balance;
-        require(balanceAfter >= balanceBefore + calcFee(amount, flashLoanFee), "Flash loan hasn't been paid back");
+        //require(balanceAfter >= balanceBefore + fee, "Flash loan hasn't been paid back");
     }
 
-    function flashLoan(uint256 amount, address _token) external nonReentrant payable {
+    function flashLoan(uint256 amount, address _token, address _flashLoanReceiver) external nonReentrant payable {
         require(
-            tokenBalances[_token][msg.sender].balance == 0, 
+            tokenBalances[_token][_flashLoanReceiver].balance == 0, 
             "You can't take a flash loan if you've already staked this token"
         );
         require(
@@ -90,14 +91,15 @@ contract FlashLoans is ReentrancyGuard {
             "Not enough tokens on the balance of the contract"
         );
         uint256 fee = calcFee(amount, flashLoanFee);
-        IERC20(_token).transfer(msg.sender, amount);
-        IFlashLoanReceiver(msg.sender).execute();
+        IERC20(_token).transfer(_flashLoanReceiver, amount);
+        IFlashLoanReceiver(_flashLoanReceiver).execute(fee);
         require(
-            IERC20(_token).allowance(msg.sender, address(this)) == amount + fee,
+            IERC20(_token).allowance(_flashLoanReceiver, address(this)) == amount + fee,
             "Repay not approved"
         );
-        IERC20(_token).transferFrom(msg.sender, address(this), amount + fee);
+        IERC20(_token).transferFrom(_flashLoanReceiver, address(this), amount + fee);
     }
 
+    fallback() external payable {}
     receive() external payable {}
 }
