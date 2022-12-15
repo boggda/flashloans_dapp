@@ -25,17 +25,20 @@ contract LiquidityPool is ReentrancyGuard {
     }
 
     function deposit() external nonReentrant payable {
+        require(balances[msg.sender].balance == 0, "You already deposit ether");
         balances[msg.sender].balance += msg.value;
         balances[msg.sender].timestamp = block.timestamp;
     }
 
     function deposit(address _token, uint256 amount) external nonReentrant {
+        require(tokenBalances[_token][msg.sender].balance == 0, "You already deposit this token");
         tokenBalances[_token][msg.sender].balance += amount;
         tokenBalances[_token][msg.sender].timestamp = block.timestamp;
         IERC20(_token).transferFrom(msg.sender, address(this), amount);
     }
 
     function withdraw() external nonReentrant {
+        require(balances[msg.sender].balance != 0, "Nothing to withdraw");
         uint256 amountToWithdraw = balances[msg.sender].balance 
             + calcReward(
                 balances[msg.sender].balance,
@@ -49,6 +52,7 @@ contract LiquidityPool is ReentrancyGuard {
     }
 
     function withdraw(address _token) external nonReentrant {
+        require(tokenBalances[_token][msg.sender].balance != 0, "Nothing to withdraw");
         uint256 amountToWithdraw = tokenBalances[_token][msg.sender].balance
         + calcReward(
                 tokenBalances[_token][msg.sender].balance,
