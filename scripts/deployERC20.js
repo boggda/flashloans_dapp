@@ -3,13 +3,14 @@ const hre = require("hardhat");
 async function main() {
     MONTHLY_REWARD = "1";
     FLASH_LOAN_FEE = "50";
+    [deployer] = await ethers.getSigners();
 
-    const FL = await hre.ethers.getContractFactory("FlashLoans");
-    const flash_loans = await FL.deploy(MONTHLY_REWARD, FLASH_LOAN_FEE);
+    const TT = await hre.ethers.getContractFactory("TestToken", deployer);
+    this.test_token = await TT.deploy();
 
-    await flash_loans.deployed();
+    await this.test_token.deployed();
     console.log(
-        `FlashLoans deployed to ${flash_loans.address}`
+        `TestToken deployed to ${test_token.address}`
     );
 }
 
