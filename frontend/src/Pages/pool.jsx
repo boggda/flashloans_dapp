@@ -1,8 +1,8 @@
 
-import WindowContent from "../UI/window"
-import {useState} from "react"
+import WindowContent from "../UI/window";
+import {useState} from "react";
 import {useRef} from 'react';
-import {CiCircleChevDown} from 'react-icons/ci'
+import {CiCircleChevDown} from 'react-icons/ci';
 import { _depositEther, _depositERC, _withdrawETH, _withdrawERC } from "../Web3/ConnectWallet";
 
 const Pool = () =>{

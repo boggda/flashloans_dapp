@@ -8,10 +8,8 @@ const HomePage = () => {
                     <img src={mainAbout} alt="" />
                 </div>
                 <div className="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, ea asperiores eum enim architecto aliquid, voluptates laborum perferendis error vero nesciunt excepturi cupiditate! Possimus sint ipsum autem earum voluptate fuga.
-                    Delectus, illo. Rerum illum perspiciatis debitis amet odio labore alias earum obcaecati! Accusantium harum quis accusamus corporis commodi quasi numquam error quos voluptates, delectus omnis obcaecati recusandae eveniet, ex rerum!
-                    Distinctio, quis aliquid. Alias nisi asperioreatque quaerat qui accusantium exercitationem rem reprehenderit soluta debitis sequi ex, nihil vitae autem dolorem quod!
-                    Quos ullam eligendi est soluta illo molestias culpa ducimus quasi, explicabo iusto fugit nisi. Est, culpa nulla, dolores harum iure nobis minima doloremque similique, praesentium ea voluptatem provident optio repellat!
+                <b>Flesh Loan Dapp</b><br></br>
+Flash loans platform for DeFi markets on Ethereum and tokens. Start your first step here
                 </div>
             </div>
         </div>

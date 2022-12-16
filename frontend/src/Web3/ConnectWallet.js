@@ -67,3 +67,19 @@ export async function _withdrawERC(tokenAddr) {
     await window.contract.connect(window._provider.getSigner(0))["withdraw(address)"](tokenAddr);
     return true;
 }
+
+export async function _flashLoanETH(amount, recAddr) {
+    if (!window.selectedAddress) {
+        return false;
+    }
+    await window.contract.connect(window._provider.getSigner(0))["flashLoan(uint256,address)"](ethers.utils.parseEther(amount), recAddr);
+    return true;
+}
+
+export async function _flashLoanERC(tokenAddr, amount, recAddr) {
+    if (!window.selectedAddress) {
+        return false;
+    }
+    await window.contract.connect(window._provider.getSigner(0))["flashLoan(uint256,address,address)"](ethers.utils.parseEther(amount), tokenAddr, recAddr);
+    return true;
+}

@@ -1,11 +1,27 @@
-import WindowContent from "../UI/window"
-import { useState } from "react"
-import {CiCircleChevDown} from 'react-icons/ci'
+import WindowContent from "../UI/window";
+import { useState } from "react";
+import {useRef} from 'react';
+import {CiCircleChevDown} from 'react-icons/ci';
+import { _flashLoanERC, _flashLoanETH } from "../Web3/ConnectWallet";
 
 const Flashloans = () =>{
 
     const [isOpen1, setOpenWindow1] = useState(false)
     const [isOpen2, setOpenWindow2] = useState(false)
+
+    const flashLoanETHAdrRef = useRef(null);
+    const flashLoanETHValRef = useRef(null);
+    const flashLoanERCAdrRef = useRef(null);
+    const flashLoanERCTAdrRef = useRef(null);
+    const flashLoanERCValRef = useRef(null);
+
+    function handleFlashLoanETH() {
+        _flashLoanETH(flashLoanETHValRef.current.value, flashLoanETHAdrRef.current.value);
+    }
+
+    function handleFlashLoanERC() {
+        _flashLoanERC(flashLoanERCTAdrRef.current.value, flashLoanERCValRef.current.value, flashLoanERCAdrRef.current.value);
+    }
 
     return (
         <div className={isOpen1 || isOpen2 ? "flashloans__container contain" : "flashloans__container"}>
@@ -23,11 +39,11 @@ const Flashloans = () =>{
                             isOpen1 ? 
                             <WindowContent>
                                 <p>Contract address</p>
-                                <input placeholder="contract address"/>
+                                <input ref={flashLoanETHAdrRef} placeholder="contract address"/>
                                 <p>Amount</p>
-                                <input placeholder="amount"/>
+                                <input ref={flashLoanETHValRef} placeholder="amount"/>
                                 <div className="buttons_container">
-                                    <button>Execute FlashLoan</button>
+                                    <button onClick={handleFlashLoanETH}>Execute FlashLoan</button>
                                 </div>
                             </WindowContent> : ''
                         }
@@ -37,7 +53,7 @@ const Flashloans = () =>{
                 
                 <div className="objectW1 item2">
                     <div className="desc">
-                        <p>FlashLoan Token</p>
+                        <p>FlashLoan Tokens</p>
                         <div className={isOpen2 ? "selector open" : "selector"} onClick={()=>setOpenWindow2(!isOpen2)}>
                             <CiCircleChevDown size={50} className={isOpen2 ? "svgopen" : "svgnone"}/>
                         </div>
@@ -47,13 +63,13 @@ const Flashloans = () =>{
                             isOpen2 ? 
                             <WindowContent>
                                 <p>Contract address</p>
-                                <input placeholder="contract address"/>
+                                <input ref={flashLoanERCAdrRef} placeholder="contract address"/>
                                 <p>Amount</p>
-                                <input placeholder="amount"/>
+                                <input ref={flashLoanERCValRef} placeholder="amount"/>
                                 <p>Token address</p>
-                                <input placeholder="token address"/>
+                                <input ref={flashLoanERCTAdrRef} placeholder="token address"/>
                                 <div className="buttons_container">
-                                    <button>Execute FlashLoan</button>
+                                    <button onClick={handleFlashLoanERC}>Execute FlashLoan</button>
                                 </div>
                             </WindowContent> : ''
                         }
