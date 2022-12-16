@@ -1,7 +1,9 @@
 
 import WindowContent from "../UI/window"
-import { useState } from "react"
+import {useState} from "react"
+import {useRef} from 'react';
 import {CiCircleChevDown} from 'react-icons/ci'
+import { _depositEther, _depositERC, _withdrawETH, _withdrawERC } from "../Web3/ConnectWallet";
 
 const Pool = () =>{
 
@@ -9,6 +11,27 @@ const Pool = () =>{
     const [isOpen2, setOpenWindow2] = useState(false)
     const [isOpen3, setOpenWindow3] = useState(false)
     const [isOpen4, setOpenWindow4] = useState(false)
+
+    const depositETHRef = useRef(null);
+    const depositERCValRef = useRef(null);
+    const depositERCAdrRef = useRef(null);
+    const withdrawERCAdrRef = useRef(null);
+
+    function handleDepositETH() {
+        _depositEther(depositETHRef.current.value);
+    }
+
+    function handleDepositERC() {
+        _depositERC(depositERCValRef.current.value, depositERCAdrRef.current.value);
+    }
+
+    function handleWithdrawETH() {
+        _withdrawETH();
+    }
+
+    function handleWithdrawERC() {
+        _withdrawERC(withdrawERCAdrRef.current.value);
+    }
 
     return (
         <div className={isOpen1 || isOpen2 || isOpen3 || isOpen4 ?  "pool__container contain" : "pool__container"}>
@@ -26,9 +49,9 @@ const Pool = () =>{
                             isOpen1 ? 
                             <WindowContent>
                                 <p>Ether value</p>
-                                <input type="value" placeholder="Ether value" onChange={(e)=> e.target.value}/>
+                                <input ref={depositETHRef} type="value" placeholder="Ether value" onChange={(e)=> e.target.value}/>
                                 <div className="buttons_container">
-                                    <button>Deposit</button>
+                                    <button onClick={handleDepositETH}>Deposit</button>
                                 </div>
                             </WindowContent> : ''
                         }
@@ -48,11 +71,11 @@ const Pool = () =>{
                             isOpen2 ? 
                             <WindowContent>
                                 <p>Token address</p>
-                                <input placeholder="token address"/>
+                                <input ref={depositERCAdrRef} placeholder="token address"/>
                                 <p>Token value</p>
-                                <input placeholder="token value"/>
+                                <input ref={depositERCValRef} placeholder="token value"/>
                                 <div className="buttons_container">
-                                    <button>Deposit</button>
+                                    <button onClick={handleDepositERC}>Deposit</button>
                                 </div>
                             </WindowContent> : ''
                         }
@@ -71,7 +94,7 @@ const Pool = () =>{
                             isOpen3 ? 
                             <WindowContent>
                                 <div className="buttons_container btn">
-                                    <button>Withdraw</button>
+                                    <button onClick={handleWithdrawETH}>Withdraw</button>
                                 </div>
                             </WindowContent> : ''
                         }
@@ -90,9 +113,9 @@ const Pool = () =>{
                             isOpen4 ? 
                             <WindowContent>
                                 <p>Token address</p>
-                                <input placeholder="token address"/>
+                                <input ref={withdrawERCAdrRef} placeholder="token address"/>
                                 <div className="buttons_container">
-                                    <button>Withdraw</button>
+                                    <button onClick={handleWithdrawERC}>Withdraw</button>
                                 </div>
                             </WindowContent> : ''
                         }
