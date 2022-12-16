@@ -1,0 +1,61 @@
+.homePage_about {
+  margin-top: 80px;
+}
+.homePage_about .about_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.homePage_about .about_content .img_container {
+  min-height: 20vh;
+}
+.homePage_about .about_content .img_container img {
+  width: 50%;
+  opacity: 0.4;
+  animation-name: rotate;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  border-radius: 70%;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 30s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  background-position: 0px 0px;
+}
+.homePage_about .about_content .img_container .globe-worldmap-back {
+  background-position: 0px -220px;
+  animation: textureSpin 30s linear infinite;
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.homePage_about .about_content .desc {
+  position: relative;
+  top: -600px;
+  opacity: 1;
+  max-width: 60%;
+  margin-top: 440px;
+  line-height: 40px;
+  border-radius: 1em;
+  padding: 20px;
+  font-size: 20px;
+  background-color: rgba(146, 26, 170, 0.5);
+}
+
+/*# sourceMappingURL=stylesHomePage.css.map */
