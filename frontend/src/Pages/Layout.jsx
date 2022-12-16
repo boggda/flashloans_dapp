@@ -7,6 +7,8 @@ import {ImDroplet} from 'react-icons/im'
 import {TiFlashOutline} from 'react-icons/ti'
 import Logo from '../images/logo.png'
 import { useEffect } from "react";
+import { _connectWallet } from "../Web3/ConnectWallet";
+//import {NETWORK_ID, CONTRACT_ADDRESS} from "../Config/config";
 
 const Layout = () => {
     const [itemsMenuDesktop, ] = useState([       
@@ -25,7 +27,14 @@ const Layout = () => {
         if(setFocus2 === true || setFocus1 === true){
             setFocus3(false)
         }
-    },[setFocus2,setFocus1])
+    },[setFocus2,setFocus1]);
+
+    const [userAddr, setUserAddr] = useState("");
+
+    const handleWalletConnect = async event => {
+        await _connectWallet();
+        setUserAddr(window.selectedAddress);
+    };
 
     return (
         <div className="layout_wrapper">
@@ -36,14 +45,19 @@ const Layout = () => {
                                 <img src={Logo} alt="" />
                             </Link>                      
                     </div>
-                    <div className="user_toDO">  
-                        <Link>
-                            <button className="auth">
+                    {userAddr && (
+                        <div className="user_toDO">
+                            <p>{userAddr}</p>
+                        </div>
+                    )}
+                    {!userAddr && (
+                        <div className="user_toDO">  
+                            <button className="auth" onClick={handleWalletConnect}>
                                 <CiWallet size={38}/>
                                 Connect wallet
                             </button>
-                        </Link>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </header>
             <main>
