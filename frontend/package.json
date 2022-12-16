@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "ethers": "^5.7.2",
     "sass": "^1.56.2"
   }
 }
